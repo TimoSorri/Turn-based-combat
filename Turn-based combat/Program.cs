@@ -1,6 +1,10 @@
 ﻿using System;
-using System.Numerics;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
+using System.Threading.Tasks;
+using System.Threading.Tasks.Sources;
 using Turn_based_combat;
 
 namespace turn_based_combat
@@ -35,6 +39,7 @@ namespace turn_based_combat
                 Unit attacker = selectUnit("Select attacker:", playerArmy);
                 Unit defender = selectUnit("Select target:", enemyArmy);
                 attack(attacker, defender);
+                Console.Clear();
 
                 // Enemy turn
                 if (enemyArmy.AreAllDead())

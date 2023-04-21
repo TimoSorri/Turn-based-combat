@@ -18,7 +18,6 @@ namespace Turn_based_combat
             this.name = name;
             this.damage = damage;
             this.hitpoints = hitpoints;
-            this.team = Team.Neutral;
         }
     }
 }
