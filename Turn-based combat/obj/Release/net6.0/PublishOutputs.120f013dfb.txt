@@ -1,0 +1,5 @@
+C:\Users\s2001071\source\repos\Turn-based combat\Turn-based combat\bin\Release\net6.0\publish\Turn-based combat.exe
+C:\Users\s2001071\source\repos\Turn-based combat\Turn-based combat\bin\Release\net6.0\publish\Turn-based combat.dll
+C:\Users\s2001071\source\repos\Turn-based combat\Turn-based combat\bin\Release\net6.0\publish\Turn-based combat.deps.json
+C:\Users\s2001071\source\repos\Turn-based combat\Turn-based combat\bin\Release\net6.0\publish\Turn-based combat.runtimeconfig.json
+C:\Users\s2001071\source\repos\Turn-based combat\Turn-based combat\bin\Release\net6.0\publish\Turn-based combat.pdb

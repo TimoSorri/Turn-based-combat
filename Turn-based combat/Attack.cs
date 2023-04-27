@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 
 namespace Turn_based_combat
 {
-    internal class AttackAction
+    internal class Attack
     {
-        public Unit attacker;
-        public Unit defender;
-
-
-        public AttackAction(Unit attacker, Unit defender)
+        Unit attacker;
+        Unit defender;
+        public Attack(Unit attacker, Unit defender)
         {
             this.attacker = attacker;
             this.defender = defender;
         }
-
+        public void Do()
+        {
+            this.defender.hitpoints -= this.attacker.damage;
+        }
         public void Undo()
         {
-            defender.hitpoints += attacker.hitpoints;
+            this.defender.hitpoints += this.attacker.damage;
         }
-    } 
-
+    }
 }

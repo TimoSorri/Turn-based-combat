@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -9,23 +10,29 @@ using Turn_based_combat;
 
 namespace turn_based_combat
 {
-    public class Program
+    class Program
     {
-        static void Main(string[] args)
-        {
-            Army playerArmy = new Army("Human army", Team.Player);
-            playerArmy.AddUnit(new Unit("Dwarf", 15, 150));
-            playerArmy.AddUnit(new Unit("Elf", 20, 50));
-            playerArmy.AddUnit(new Unit("Human", 90, 90));
+        static Stack<Attack> attackActions = new Stack<Attack>();
 
-            Army enemyArmy = new Army("Skeleton army", Team.Enemy);
-            enemyArmy.AddUnit(new Unit("Orc", 15, 55));
-            enemyArmy.AddUnit(new Unit("Skeleton", 20, 10));
-            enemyArmy.AddUnit(new Unit("God", 1, 1));
+        public static void Main()
+        {
+            Army playerArmy = new Army("Player army", Team.Player);
+            playerArmy.AddUnit(new Unit("dwarf", 15, 150, 150));
+            playerArmy.AddUnit(new Unit("Elf", 20, 50, 50));
+            playerArmy.AddUnit(new Unit("Human", 90, 99, 99));
+
+            Army enemyArmy = new Army("Enemy army", Team.Enemy);
+            enemyArmy.AddUnit(new Unit("Orc", 15, 55,55));
+            enemyArmy.AddUnit(new Unit("Skeleton", 20, 10,10));
+            enemyArmy.AddUnit(new Unit("God", 1, 1, 1));
+
+
+
 
             Random randomGenerator = new Random();
 
             ColorPrinter.ColorWriteLine("Battle begins!", ColorPrinter.noteColor);
+            ColorPrinter.ColorWriteLine("Give the number you want to choose as attacker and then give the number of who you want to attack, you can also press z to undo your action", ColorPrinter.noteColor);
             ColorPrinter.PrintArmy(playerArmy.Name, playerArmy);
             ColorPrinter.PrintArmy(enemyArmy.Name, enemyArmy);
 
@@ -39,7 +46,6 @@ namespace turn_based_combat
                 Unit attacker = selectUnit("Select attacker:", playerArmy);
                 Unit defender = selectUnit("Select target:", enemyArmy);
                 attack(attacker, defender);
-                Console.Clear();
 
                 // Enemy turn
                 if (enemyArmy.AreAllDead())
@@ -50,7 +56,7 @@ namespace turn_based_combat
                 defender = randomizeUnit(playerArmy, randomGenerator);
                 attack(attacker, defender);
             }
-            ColorPrinter.ColorWriteLine("The battle is over. Press any key...", ColorPrinter.noteColor);
+            ColorPrinter.ColorWriteLine("The battle is over. Press enter to quit", ColorPrinter.noteColor);
             Console.ReadLine();
         }
 
@@ -60,25 +66,33 @@ namespace turn_based_combat
             {
                 ColorPrinter.PrintArmy(prompt, army);
                 string valinta = Console.ReadLine();
-                int numero = Convert.ToInt32(valinta);
 
-                if (numero > 0 && numero <= army.Units.Count)
+                if (valinta == "z")
                 {
-                    int index = numero - 1;
-                    Unit selected = army.Units[index];
-                    if (selected.hitpoints > 0)
-                    {
-                        // Ok!
-                        return selected;
-                    }
-                    else
-                    {
-                        ColorPrinter.ColorWriteLine("Cannot choose a dead unit.", ColorPrinter.errorColor);
-                    }
+                    Attack last = attackActions.Pop();
+                    last.Undo();
                 }
                 else
                 {
-                    ColorPrinter.ColorWriteLine("Invalid unit number. Try again.", ColorPrinter.errorColor);
+                    int numero = Convert.ToInt32(valinta);
+                    if (numero > 0 && numero <= army.Units.Count)
+                    {
+                        int index = numero - 1;
+                        Unit selected = army.Units[index];
+                        if (selected.hitpoints > 0)
+                        {
+                            // Ok!
+                            return selected;
+                        }
+                        else
+                        {
+                            ColorPrinter.ColorWriteLine("Cannot choose a dead unit.", ColorPrinter.errorColor);
+                        }
+                    }
+                    else
+                    {
+                        ColorPrinter.ColorWriteLine("Invalid unit number. Try again.", ColorPrinter.errorColor);
+                    }
                 }
             }
         }
@@ -110,6 +124,11 @@ namespace turn_based_combat
             {
                 defender.hitpoints -= attacker.damage;
                 ColorPrinter.PrintAttack(attacker, defender);
+
+                // !
+                // Store the attack that just happened
+                Attack attack = new Attack(attacker, defender);
+                attackActions.Push(attack);
             }
         }
     }
